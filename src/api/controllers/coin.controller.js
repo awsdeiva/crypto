@@ -4,10 +4,12 @@ const Ticker = require('../models/ticker.model');
 const mongoose = require('mongoose');
 const axios = require('axios');
 const { forEach } = require('lodash');
-const uuidv4 = require('uuid/v4');
 const moment = require('moment');
 
 const onInsert = (err, docs) => {
+  if(err) {
+    console.log(err);
+  }
 }
 
 /**
@@ -16,7 +18,7 @@ const onInsert = (err, docs) => {
  */
 exports.fetch = async (req, res, next) => {
   try {
-      const url = 'https://api.coinmarketcap.com/v1/ticker/?start=' + req.query.start + '&limit='+ req.query.limit;
+      const url = 'https://api.coinmarketcap.com/v1/ticker/?start=0&limit=1500';
       const response = await axios.get(url, {  });
       if(response && response.data) {
           let processedData = [];
@@ -39,6 +41,7 @@ exports.fetch = async (req, res, next) => {
       }
       res.json({"status": "success"});
   } catch (error) {
+    console.log(error);
     if(error && error.response && error.response.status) {
       if(error.response.status != 200) {
           res.json({"status": "empty"});

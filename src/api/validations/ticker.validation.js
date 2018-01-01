@@ -10,11 +10,4 @@ module.exports = {
       perPage: Joi.number().min(1).max(100)
     },
   },
-  // GET /v1/coin/fetch
-  fetchCoin: {
-    query: {
-      start: Joi.number().min(0),
-      limit: Joi.number().min(1).max(300)
-    },
-  },
 };
