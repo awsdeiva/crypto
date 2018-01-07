@@ -58,7 +58,7 @@ const tickerSchema = new mongoose.Schema({
     required: true,
   },
   last_updated: {
-    type: Date,
+    type: Number,
     required: true,
     index: true
   },
@@ -82,6 +82,31 @@ tickerSchema.statics = {
 
     return this.find(options)
       .sort({ last_updated: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage)
+      .exec();
+  },
+
+  /**
+   * List Coin Tickers in descending order of 'asOf' timestamp.
+   *
+   * @param {number} skip - Number of Coin tickers to be skipped.
+   * @param {number} limit - Limit number of Coin tickers to be returned.
+   * @returns {Promise<Coin[]>}
+   */
+  query({
+    page = 1, perPage = 100,
+  }, conditions, sorting) {
+    return this.aggregate([{
+      '$match':conditions,
+      '$lookup': {
+        from: "coins",
+        localField: "symbol",
+        foreignField: "Symbol",
+        as: "coin"
+      }
+    }])
+      .sort(sorting)
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();

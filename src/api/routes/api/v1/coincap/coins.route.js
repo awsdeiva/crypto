@@ -1,17 +1,17 @@
 const express = require('express');
 const validate = require('express-validation');
-const controller = require('../../controllers/coins.controller');
-const authorize = require('../../middlewares/auth').authorize;
-const Coins = require('../../models/coins.model');
+const controller = require('../../../../controllers/coincap/coins.controller');
+const authorize = require('../../../../middlewares/auth').authorize;
+const Coins = require('../../../../models/coincap/coins.model');
 const router = express.Router();
 const {
   listCoins,
-} = require('../../validations/coins.validation');
+} = require('../../../../validations/coins.validation');
 
 router
   .route('/')
   /**
-   * @api {get} v1/coins List Coins
+   * @api {get} v1/coincap/coins List Coins
    * @apiDescription Get this list of Coins
    * @apiVersion 1.0.0
    * @apiName ListCoins

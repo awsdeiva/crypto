@@ -34,7 +34,7 @@ exports.fetch = async (req, res, next) => {
               value.percent_change_1h = parseFloat(value.percent_change_1h) || -1;
               value.percent_change_24h = parseFloat(value.percent_change_24h) || -1;
               value.percent_change_7d = parseFloat(value.percent_change_7d) || -1;
-              value.last_updated = moment((parseFloat(value.last_updated) || 0)*1000).utc().format();
+              value.last_updated = (parseFloat(value.last_updated) || 0)*1000;
               processedData.push(value);
           });
           Ticker.collection.insert(processedData, onInsert);
@@ -61,6 +61,30 @@ exports.load = async (req, res, next, id) => {
     let coinTickers = await Ticker.list(req.query, id);
     req.locals = { coinTickers };
     return next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+/**
+ * Get coin ticker list
+ * @public
+ */
+exports.trending = async (req, res, next) => {
+  var currentTimeStamp = Date.now();
+  currentTimeStamp = currentTimeStamp - (60*60*1000);
+  try {
+    var options = {
+    'percent_change_1h': { $gte: 3.0 },
+    'percent_change_24h': { $gte: 5.0 },
+    'last_updated': { '$gte': currentTimeStamp },
+    '24h_volume_usd': {'$gte': 1000 }
+    };
+    var sorting = { percent_change_1h: -1 };
+    console.log(options);
+    let coinTrending = await Ticker.query(req.query, options, sorting);
+    res.json(coinTrending);
   } catch (error) {
     next(error);
   }

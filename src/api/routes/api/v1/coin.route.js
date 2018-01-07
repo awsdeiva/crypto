@@ -1,12 +1,12 @@
 const express = require('express');
 const validate = require('express-validation');
-const controller = require('../../controllers/coin.controller');
-const authorize = require('../../middlewares/auth').authorize;
-const Ticker = require('../../models/ticker.model');
+const controller = require('../../../controllers/coin.controller');
+const authorize = require('../../../middlewares/auth').authorize;
+const Ticker = require('../../../models/ticker.model');
 const router = express.Router();
 const {
   listCoin,
-} = require('../../validations/ticker.validation');
+} = require('../../../validations/ticker.validation');
 
 router
   .param('coin', controller.load);
@@ -24,6 +24,10 @@ router
    *
    */
   .get(authorize(), controller.fetch);
+
+router
+  .route('/trending')
+  .get(authorize(), controller.trending);
 
 router
   .route('/:coin')
