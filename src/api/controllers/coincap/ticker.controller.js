@@ -13,7 +13,6 @@ exports.list = async (req, res, next) => {
     const url = 'http://coincap.io/front';
     const response = await axios.get(url, {  });
     var timeStamp = Date.now();
-    console.log(response.data);
     if(response && response.data) {
       let processedData = [];
       forEach(response.data, function(value, key) {
